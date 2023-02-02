@@ -3,28 +3,25 @@ import os
 import shutil
 
 # ftp 정보
-#host = 'rovitek.inosf.net'
-#user = 'givet'
-#passwd = 'Givet23'
+host = 'rovitek.inosf.net'
+user = 'givet'
+passwd = 'Givet23'
 
-host = 'localhost'
-user = 'test'
-passwd = 'test108'
+# host = 'localhost'
+# user = 'test'
+# passwd = 'test108'
 
 folder_tree = 0
 
-# ###############
-# # 다건 파일 다운로드
-# ###############
+
 try:
     # ftp 연결
     with ftplib.FTP() as ftp:
-        ftp.connect(host=host,port=21)
+        ftp.connect(host=host,port=20)
         ftp.encoding = 'utf-8'
         ftp.set_pasv(False)
         s = ftp.login(user=user,passwd=passwd)
         print("Connect success!")
-
 
 
         # List up files
@@ -32,7 +29,8 @@ try:
         ftp.dir()
         #print(list)
 
-
+        """
+        
         if not os.path.exists("result"):
             os.makedirs("result")
 
@@ -68,6 +66,7 @@ try:
                 
         fd.close()
         ftp.close()
+        """
                 
 except Exception as e:
     print(e)
