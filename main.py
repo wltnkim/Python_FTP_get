@@ -1,5 +1,6 @@
 import ftplib
 import os
+import shutil
 
 # ftp 정보
 #host = 'rovitek.inosf.net'
@@ -31,6 +32,10 @@ try:
         ftp.dir()
         #print(list)
 
+
+        if not os.path.exists("result"):
+            os.makedirs("result")
+
         # 파일다운로드
         
         for file in list :
@@ -60,6 +65,25 @@ try:
                 #print("File : " + file)
                 fd = open(file, 'wb')
                 ftp.retrbinary("RETR " + file, fd.write)
+                
+        fd.close()
+        ftp.close()
+                
+except Exception as e:
+    print(e)
+
+
+
+try:
+    get_files = os.listdir(os.getcwd())
+    for get_file in get_files:
+        if '.jpg' in get_file:
+            #print(get_file)
+            if os.path.exists("result/" + get_file):
+                print(get_file + " exists")
+            else:
+                shutil.move(get_file, "result/" + get_file)
+                
 
 
 except Exception as e:
