@@ -17,19 +17,21 @@ folder_tree = 0
 try:
     # ftp 연결
     with ftplib.FTP() as ftp:
-        ftp.connect(host=host,port=20)
+        ftp.connect(host=host,port=21)
         ftp.encoding = 'utf-8'
-        ftp.set_pasv(False)
+        #ftp.set_pasv(False)
+        ftp.set_pasv(True)
         s = ftp.login(user=user,passwd=passwd)
         print("Connect success!")
 
-
+        ftp.cwd("/home/rovitek/4inch/public/data")
+        
         # List up files
         list = ftp.nlst()
         ftp.dir()
         #print(list)
-
-        """
+ 
+        
         
         if not os.path.exists("result"):
             os.makedirs("result")
@@ -66,7 +68,7 @@ try:
                 
         fd.close()
         ftp.close()
-        """
+        
                 
 except Exception as e:
     print(e)
@@ -76,7 +78,7 @@ except Exception as e:
 try:
     get_files = os.listdir(os.getcwd())
     for get_file in get_files:
-        if '.jpg' in get_file:
+        if '.png' in get_file:
             #print(get_file)
             if os.path.exists("result/" + get_file):
                 print(get_file + " exists")
