@@ -82,6 +82,7 @@ try:
             #print(get_file)
             if os.path.exists("result/" + get_file):
                 print(get_file + " exists")
+                os.remove(get_file)
             else:
                 shutil.move(get_file, "result/" + get_file)
                 
