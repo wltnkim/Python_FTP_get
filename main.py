@@ -78,7 +78,7 @@ except Exception as e:
 try:
     get_files = os.listdir(os.getcwd())
     for get_file in get_files:
-        if '.png' in get_file:
+        if '.png' in get_file or '.jpg' in get_file:
             #print(get_file)
             if os.path.exists("result/" + get_file):
                 print(get_file + " exists")
