@@ -33,17 +33,25 @@ try:
         ftp.dir()
         #print(list)
  
-        list = os.listdir('post_imgs')
+        list = os.listdir('post_imgs/')
         print(list)
 
 
         now = datetime.datetime.now()
         print(now.strftime("%Y%m%d%I"))
 
-        #ftp.mkd(now.strftime("%Y%m%d%I%m%S"))
+        ftp.mkd(now.strftime("%Y%m%d%I%m%S"))
+        ftp.cwd(now.strftime("%Y%m%d%I%m%S"))
+        # with open(file="post_img.py", mode='rb') as wf:
+        #     ftp.storbinary('STOR post_img.py', wf)
 
-        # with open(file="get_img.py", mode='rb') as wf:
-        #     ftp.storbinary('STOR get_img.py', wf)
+        for filename in list:
+            print(filename)
+            local_filename = os.path.join('post_imgs/', filename)
+            with open(local_filename, 'rb') as read_f:
+                # f.storlines("STOR "+filename, read_f)
+                ftp.storbinary('STOR '+filename, read_f)
+            read_f.close
         
         ftp.close()
         
