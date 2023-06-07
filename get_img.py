@@ -1,8 +1,10 @@
 import ftplib
 import os
 import shutil
+import sys
+import pymysql
 
-# ftp 정보
+# ftp ?| ~U보
 host = 'rovitek.inosf.net'
 user = 'givet'
 passwd = 'Givet23'
@@ -13,9 +15,22 @@ passwd = 'Givet23'
 
 folder_tree = 0
 
+try:
+    conn = pymysql.connect(host='rovitek.inosf.net', user='givet', password='Givet2023', db='fourInch', charset='utf8')
+    cur = conn.cursor()
+    sql = "SELECT location FROM locations WHERE id = %s"
+    vals = sys.argv[1]
+    cur.execute(sql, vals)
+    row = cur.fetchone()
+    print(row)
+    conn.commit()
+    conn.close()
+
+except Exception as e:
+    print(e)
 
 try:
-    # ftp 연결
+    # ftp ?~W?결
     with ftplib.FTP() as ftp:
         ftp.connect(host=host,port=21)
         ftp.encoding = 'utf-8'
@@ -25,51 +40,27 @@ try:
         print("Connect success!")
 
         ftp.cwd("/home/rovitek/4inch/public/data")
-        
+
         # List up files
         list = ftp.nlst()
         ftp.dir()
         #print(list)
- 
-        
-        
+
+        get_folder_name = row[0]
+        print(get_folder_name)
+
         if not os.path.exists("get_imgs"):
             os.makedirs("get_imgs")
 
-        # 파일다운로드
-        
-        for file in list :
-            filename = file.split(sep='.')
-            if not len(filename) >= 2:
-                #print("Directory : " + file)
+        ftp.cwd(get_folder_name)
+        ftp.dir()
 
-                while (folder_tree > 0):
-                    folder_tree = folder_tree - 1
-                    ftp.cwd('..')
+        file_list = ftp.nlst()
+        for folder_tree_file in file_list:
+            fd = open(folder_tree_file, 'wb')
+            ftp.retrbinary("RETR " + folder_tree_file, fd.write)
 
-                ftp.cwd(file)
-                ftp.dir()
-                folder_tree = folder_tree + 1
 
-                file_list = ftp.nlst()
-                for folder_tree_file in file_list:
-                    #print("File : " + file + "/" + folder_tree_file)
-                    fd = open(folder_tree_file, 'wb')
-                    ftp.retrbinary("RETR " + folder_tree_file, fd.write)
-
-            else:
-                while (folder_tree > 0):
-                    folder_tree = folder_tree - 1
-                    ftp.cwd('..')
-
-                #print("File : " + file)
-                fd = open(file, 'wb')
-                ftp.retrbinary("RETR " + file, fd.write)
-                
-        fd.close()
-        ftp.close()
-        
-                
 except Exception as e:
     print(e)
 
@@ -85,8 +76,9 @@ try:
                 os.remove(get_file)
             else:
                 shutil.move(get_file, "get_imgs/" + get_file)
-                
+
 
 
 except Exception as e:
     print(e)
+            
